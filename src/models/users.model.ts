@@ -11,6 +11,10 @@ const UserSchema: Schema = new Schema({
     type: String,
     required: true,
   },
+  accountType: {
+    type: String,
+    require: true,
+  },
 });
 
 export const UserModel = model<User & Document>('User', UserSchema);

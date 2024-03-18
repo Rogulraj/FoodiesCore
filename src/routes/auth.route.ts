@@ -4,6 +4,7 @@ import { CreateUserDto } from '@dtos/users.dto';
 import { Routes } from '@interfaces/routes.interface';
 import { AuthMiddleware } from '@middlewares/auth.middleware';
 import { ValidationMiddleware } from '@middlewares/validation.middleware';
+import { UserLoginDto } from '@/dtos/auth.dto';
 
 export class AuthRoute implements Routes {
   public path = '/web';
@@ -16,7 +17,7 @@ export class AuthRoute implements Routes {
 
   private initializeRoutes() {
     this.router.post(`${this.path}/signup`, ValidationMiddleware(CreateUserDto), this.auth.signUp);
-    this.router.post(`${this.path}/login`, ValidationMiddleware(CreateUserDto), this.auth.logIn);
+    this.router.post(`${this.path}/login`, ValidationMiddleware(UserLoginDto), this.auth.logIn);
     this.router.post(`${this.path}/logout`, AuthMiddleware, this.auth.logOut);
   }
 }

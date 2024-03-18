@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response } from 'express';
 import { HttpException } from '@exceptions/httpException';
 import { logger } from '@utils/logger';
-import { ReturnResponse } from '@interfaces/returnResponse.interface';
+import { ReturnResponse } from '@/interfaces/commonResponse.interface';
 
 export const ErrorMiddleware = async (error: HttpException, req: Request, res: Response, next: NextFunction) => {
   try {
