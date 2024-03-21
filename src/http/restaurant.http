@@ -1,0 +1,49 @@
+
+# baseURL
+@baseURL = http://localhost:3006/api/v1/web/restaurant
+
+### 
+# create restaurant
+POST {{baseURL}}/create
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NWY1NTUzNWVhZjE1YWMwMDVmYWZmN2QiLCJpYXQiOjE3MTA5NDYyMzcsImV4cCI6MTcxMDk0OTgzN30.xg5h6vHIy4ilNU3YfTkdqr-k84lkkGxCFjgJnJZwp20
+
+{
+    "name": "Royal Spicy House",
+    "imageUrl": "/path",
+    "menuType":  { 
+        "Breakfast": {
+            "name": "string",
+            "price": "string",
+            "description": "string",
+            "ingredients": "string",
+            "nutritions": "string"
+        }
+    }
+}
+
+###  
+PUT {{baseURL}}/add-menu-type
+Content-Type: multipart/form-data
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NWY1NTUzNWVhZjE1YWMwMDVmYWZmN2QiLCJpYXQiOjE3MTEwMDI5OTQsImV4cCI6MTcxMTAwNjU5NH0.wA3SqGlXn4xREnll21PKcK9l-t2Es-YvlnGSyKfLBQo
+
+{
+    "type": "Italian"
+}
+
+###
+PUT {{baseURL}}/add-menu-item
+Content-Type: multipart/form-data
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NWY1NTUzNWVhZjE1YWMwMDVmYWZmN2QiLCJpYXQiOjE3MTEwMDkwNDMsImV4cCI6MTcxMTAxMjY0M30.vprTxzr3ulpDpOMhzFKcI0uBTgdXduHwEkVZzivFuDo
+
+{
+    "type": "Italian",
+    "item": {
+        "name": "nigiri set",
+        "imageUrl": "/path",
+        "price": "10.4",
+        "description": "There we go with new Challenge",
+        "ingredients": "Hey Buddy its a new ingredients",
+        "nutritions": "Stay strong and healthy"
+    }
+}

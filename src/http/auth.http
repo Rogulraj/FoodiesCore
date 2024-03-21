@@ -1,5 +1,5 @@
 # baseURL
-@baseURL = http://localhost:3005
+@baseURL = http://localhost:3006/api/v1
 
 ###
 # User Signup
@@ -13,7 +13,7 @@ Content-Type: application/json
 
 ###
 # User Login
-POST {{ baseURL }}/login
+POST {{ baseURL }}/web/login
 Content-Type: application/json
 
 {

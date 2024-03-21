@@ -14,9 +14,9 @@ const createToken = (user: User): TokenData => {
   return { expiresIn, token: sign(dataStoredInToken, SECRET_KEY, { expiresIn }) };
 };
 
-const createCookie = (tokenData: TokenData): string => {
-  return `Authorization=${tokenData.token}; HttpOnly; Max-Age=${tokenData.expiresIn};`;
-};
+// const createCookie = (tokenData: TokenData): string => {
+//   return `Authorization=${tokenData.token}; HttpOnly; Max-Age=${tokenData.expiresIn};`;
+// };
 
 export class AuthService {
   public async signup(userData: User): Promise<CommonResponse<CreateUserResponse>> {
