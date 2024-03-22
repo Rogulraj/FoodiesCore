@@ -11,11 +11,13 @@ export class RestaurantController {
     try {
       const userId: RequestWithId['_id'] = req._id;
 
+      console.log('userData = ', req.body);
+
       const userData: RestaurantType = {
         _id: userId,
         name: req.body.name,
-        imageUrl: req.file.path,
-        menuType: JSON.parse(req.body.menuType) || {},
+        imageUrl: req.body.imageUrl,
+        menuType: req.body.menuType || {},
       };
 
       const createRestaurantData: CommonResponse<RestaurantType> = await this.service.createRestaurant(userData);
@@ -41,17 +43,8 @@ export class RestaurantController {
 
   public addMenuItem = async (req: RequestWithId, res: Response, next: NextFunction) => {
     try {
-      const userData: AddMenuBody = {
-        type: req.body.type,
-        item: {
-          imageUrl: req.file.path,
-          name: req.body.name,
-          price: req.body.price,
-          description: req.body.description,
-          ingredients: req.body.ingredients,
-          nutritions: req.body.nutritions,
-        },
-      };
+      const userData: AddMenuBody = req.body;
+
       const userId: RequestWithId['_id'] = req._id;
 
       const addMenuItemData: CommonResponse<IdNameResponse> = await this.service.addMenuItem(userId, userData);
