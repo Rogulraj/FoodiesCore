@@ -12,11 +12,18 @@ export class RestaurantService {
     if (!imagePath) throw new HttpException(500, 'Image Not store in db.');
     userData.imageUrl = imagePath;
 
-    const createData = await (await RestaurantModel.create(userData)).populate('_id');
+    const createData = await RestaurantModel.create(userData);
 
     const response: CommonResponse<RestaurantType> = { statusCode: 201, data: createData, message: 'restaurant created' };
 
     return response;
+  }
+
+  public async getAllRestaurants(): Promise<CommonResponse<RestaurantType[]>> {
+    const findOne = await RestaurantModel.find();
+
+    const responseData: CommonResponse<RestaurantType[]> = { statusCode: 200, data: findOne, message: 'restaurant data' };
+    return responseData;
   }
 
   public async addMenuType(userId: RequestWithId['_id'], userData: AddMenuBody): Promise<CommonResponse<IdNameResponse>> {

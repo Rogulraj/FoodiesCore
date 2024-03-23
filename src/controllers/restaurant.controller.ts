@@ -2,27 +2,28 @@ import { RequestWithId } from '@/interfaces/auth.interface';
 import { CommonResponse, IdNameResponse } from '@/interfaces/commonResponse.interface';
 import { AddMenuBody, RestaurantType } from '@/interfaces/restaurant.interface';
 import { RestaurantService } from '@/services/restaurant.service';
-import { NextFunction, Response } from 'express';
+import { NextFunction, Response, Request } from 'express';
 
 export class RestaurantController {
   public service = new RestaurantService();
 
-  public createRestaurant = async (req: RequestWithId, res: Response, next: NextFunction) => {
+  public createRestaurant = async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const userId: RequestWithId['_id'] = req._id;
-
-      console.log('userData = ', req.body);
-
-      const userData: RestaurantType = {
-        _id: userId,
-        name: req.body.name,
-        imageUrl: req.body.imageUrl,
-        menuType: req.body.menuType || {},
-      };
+      const userData: RestaurantType = req.body;
 
       const createRestaurantData: CommonResponse<RestaurantType> = await this.service.createRestaurant(userData);
 
       res.status(createRestaurantData.statusCode).json(createRestaurantData);
+    } catch (error) {
+      next(error);
+    }
+  };
+
+  public getAllRestaurants = async (req: RequestWithId, res: Response, next: NextFunction) => {
+    try {
+      const restaurantsList: CommonResponse<RestaurantType[]> = await this.service.getAllRestaurants();
+
+      res.status(restaurantsList.statusCode).json(restaurantsList);
     } catch (error) {
       next(error);
     }

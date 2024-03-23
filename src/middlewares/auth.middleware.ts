@@ -15,7 +15,29 @@ const getAuthorization = req => {
   return null;
 };
 
-export const AuthMiddleware = async (req: RequestWithUser, res: Response, next: NextFunction) => {
+// export const AuthMiddleware = async (req: RequestWithUser, res: Response, next: NextFunction) => {
+//   try {
+//     const Authorization = getAuthorization(req);
+
+//     if (Authorization) {
+//       const { _id } = (await verify(Authorization, SECRET_KEY)) as DataStoredInToken;
+//       const findUser = await UserModel.findById(_id);
+
+//       if (findUser) {
+//         req.user = findUser;
+//         next();
+//       } else {
+//         next(new HttpException(401, 'Wrong authentication token'));
+//       }
+//     } else {
+//       next(new HttpException(404, 'Authentication token missing'));
+//     }
+//   } catch (error) {
+//     next(new HttpException(401, 'Wrong authentication token'));
+//   }
+// };
+
+export const UserVerificationMiddleware = async (req: RequestWithId, res: Response, next: NextFunction) => {
   try {
     const Authorization = getAuthorization(req);
 
@@ -24,7 +46,7 @@ export const AuthMiddleware = async (req: RequestWithUser, res: Response, next: 
       const findUser = await UserModel.findById(_id);
 
       if (findUser) {
-        req.user = findUser;
+        req._id = findUser._id;
         next();
       } else {
         next(new HttpException(401, 'Wrong authentication token'));
@@ -37,25 +59,23 @@ export const AuthMiddleware = async (req: RequestWithUser, res: Response, next: 
   }
 };
 
-export const UserVerificationMiddleware = async (req: RequestWithId, res: Response, next: NextFunction) => {
+export const BodyAuthMiddleware = async (req: RequestWithId, res: Response, next: NextFunction) => {
   try {
-    const Authorization = getAuthorization(req);
+    const _id = req.body._id;
 
-    if (Authorization) {
-      const { _id } = (await verify(Authorization, SECRET_KEY)) as DataStoredInToken;
+    if (_id) {
       const findUser = await UserModel.findById(_id);
 
       if (findUser) {
         req._id = findUser._id;
-        console.log('req._id = ', req._id);
         next();
       } else {
-        next(new HttpException(401, 'Wrong authentication token'));
+        next(new HttpException(401, 'Wrong user crediential'));
       }
     } else {
-      next(new HttpException(404, 'Authentication token missing'));
+      next(new HttpException(404, 'user id missing'));
     }
   } catch (error) {
-    next(new HttpException(401, 'Wrong authentication token'));
+    next(new HttpException(401, 'Wrong user crediential'));
   }
 };
