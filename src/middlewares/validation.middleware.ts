@@ -25,3 +25,33 @@ export const ValidationMiddleware = (type: any, skipMissingProperties = false, w
       });
   };
 };
+
+export const QueryValidationMiddelware = (type: any, skipMissingProperties: boolean = false) => {
+  return (req: Request<any, any, any, any>, res: Response, next: NextFunction) => {
+    const dto = plainToInstance(type, req.query);
+    validateOrReject(dto, { skipMissingProperties })
+      .then(() => {
+        req.query = dto;
+        next();
+      })
+      .catch((errors: ValidationError[]) => {
+        const message = errors.map((error: ValidationError) => Object.values(error.constraints)).join(', ');
+        next(new HttpException(400, message));
+      });
+  };
+};
+
+export const ParamsValidationMiddelware = (type: any, skipMissingProperties: boolean = false) => {
+  return (req: Request<any, any, any, any>, res: Response, next: NextFunction) => {
+    const dto = plainToInstance(type, req.params);
+    validateOrReject(dto, { skipMissingProperties })
+      .then(() => {
+        req.params = dto;
+        next();
+      })
+      .catch((errors: ValidationError[]) => {
+        const message = errors.map((error: ValidationError) => Object.values(error.constraints)).join(', ');
+        next(new HttpException(400, message));
+      });
+  };
+};

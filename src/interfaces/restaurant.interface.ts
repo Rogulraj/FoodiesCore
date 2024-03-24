@@ -1,4 +1,5 @@
 export interface MenuTypeItem {
+  _id?: string;
   name: string;
   imageUrl: string;
   price: number;
@@ -8,7 +9,7 @@ export interface MenuTypeItem {
 }
 
 export interface MenuType {
-  [key: string]: MenuTypeItem;
+  [key: string]: MenuTypeItem[];
 }
 
 export interface RestaurantType {

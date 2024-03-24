@@ -2,7 +2,7 @@ import { HttpException } from '@/exceptions/httpException';
 import { StoreBase64Image } from '@/helpers/base64.helper';
 import { RequestWithId } from '@/interfaces/auth.interface';
 import { CommonResponse, IdNameResponse } from '@/interfaces/commonResponse.interface';
-import { AddMenuBody, RestaurantType } from '@/interfaces/restaurant.interface';
+import { AddMenuBody, MenuTypeItem, RestaurantType } from '@/interfaces/restaurant.interface';
 import { RestaurantModel } from '@/models/restaurant.model';
 
 export class RestaurantService {
@@ -23,6 +23,13 @@ export class RestaurantService {
     const findOne = await RestaurantModel.find();
 
     const responseData: CommonResponse<RestaurantType[]> = { statusCode: 200, data: findOne, message: 'restaurant data' };
+    return responseData;
+  }
+
+  public async getRestaurantById(restaurantId: string): Promise<CommonResponse<RestaurantType>> {
+    const findOne = await RestaurantModel.findOne({ _id: restaurantId });
+
+    const responseData: CommonResponse<RestaurantType> = { statusCode: 200, data: findOne, message: 'restaurant data' };
     return responseData;
   }
 
@@ -57,6 +64,15 @@ export class RestaurantService {
     const update = await findData.save();
 
     const response: CommonResponse<IdNameResponse> = { statusCode: 200, data: { _id: update._id, name: update.name }, message: 'menu item added' };
+    return response;
+  }
+
+  public async getFoodById(foodId: string, restaurantId: string, category: string): Promise<CommonResponse<MenuTypeItem>> {
+    const findFoodData: MenuTypeItem[] = await (await RestaurantModel.findById(restaurantId)).menuType.get(category);
+    const foodData: MenuTypeItem = findFoodData.find(item => item._id === foodId);
+
+    const response: CommonResponse<MenuTypeItem> = { statusCode: 200, data: foodData, message: 'food data fetched.' };
+
     return response;
   }
 }

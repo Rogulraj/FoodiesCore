@@ -1,6 +1,6 @@
 import { RequestWithId } from '@/interfaces/auth.interface';
 import { CommonResponse, IdNameResponse } from '@/interfaces/commonResponse.interface';
-import { AddMenuBody, RestaurantType } from '@/interfaces/restaurant.interface';
+import { AddMenuBody, MenuTypeItem, RestaurantType } from '@/interfaces/restaurant.interface';
 import { RestaurantService } from '@/services/restaurant.service';
 import { NextFunction, Response, Request } from 'express';
 
@@ -29,6 +29,18 @@ export class RestaurantController {
     }
   };
 
+  public getRestaurantById = async (req: RequestWithId, res: Response, next: NextFunction) => {
+    try {
+      const { id: restaurantId } = req.params;
+      console.log(restaurantId);
+      const restaurantData: CommonResponse<RestaurantType> = await this.service.getRestaurantById(restaurantId);
+
+      res.status(restaurantData.statusCode).json(restaurantData);
+    } catch (error) {
+      next(error);
+    }
+  };
+
   public addMenuType = async (req: RequestWithId, res: Response, next: NextFunction) => {
     try {
       const userData: AddMenuBody = req.body;
@@ -51,6 +63,19 @@ export class RestaurantController {
       const addMenuItemData: CommonResponse<IdNameResponse> = await this.service.addMenuItem(userId, userData);
 
       res.status(addMenuItemData.statusCode).json(addMenuItemData);
+    } catch (error) {
+      next(error);
+    }
+  };
+
+  public getFoodById = async (req: RequestWithId, res: Response, next: NextFunction) => {
+    try {
+      const foodId = req.params.id;
+      const restaurantId = req.query.restaurantId as string;
+      const category = req.query.category as string;
+
+      const foodData: CommonResponse<MenuTypeItem> = await this.service.getFoodById(foodId, restaurantId, category);
+      res.status(foodData.statusCode).json(foodData);
     } catch (error) {
       next(error);
     }

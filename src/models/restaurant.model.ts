@@ -1,8 +1,9 @@
-import { MenuTypeItem, RestaurantType } from '@/interfaces/restaurant.interface';
+import { MenuType, MenuTypeItem, RestaurantType } from '@/interfaces/restaurant.interface';
 import { Document, Schema, model } from 'mongoose';
 
 // MenuSchema
 const MenuSchema = new Schema<MenuTypeItem>({
+  _id: { type: String },
   name: { type: String },
   imageUrl: { type: String },
   price: { type: Number },

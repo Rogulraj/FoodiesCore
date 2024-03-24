@@ -47,3 +47,8 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NWY1NTUzN
         "nutritions": "Stay strong and healthy"
     }
 }
+
+####
+ 
+GET {{baseURL}}/food/66004e9be34a27001e919894?restaurantId=65f55535eaf15ac005faff7d&category=Breakfast
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NWY1NTUzNWVhZjE1YWMwMDVmYWZmN2QiLCJpYXQiOjE3MTEyOTMzMDMsImV4cCI6MTcxMTI5NjkwM30.oVBXq_ztWxBR_9gAn2pwG6UYRa6lH2b0xpCnYtvwS_U
