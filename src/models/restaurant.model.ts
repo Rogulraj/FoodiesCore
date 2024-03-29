@@ -1,15 +1,19 @@
-import { MenuType, MenuTypeItem, RestaurantType } from '@/interfaces/restaurant.interface';
+import { MenuType, MenuCategoryItems, RestaurantType } from '@/interfaces/restaurant.interface';
 import { Document, Schema, model } from 'mongoose';
 
-// MenuSchema
-const MenuSchema = new Schema<MenuTypeItem>({
-  _id: { type: String },
+// MenuCategorySchema
+const MenuCategorySchema = new Schema<MenuCategoryItems>({
   name: { type: String },
   imageUrl: { type: String },
   price: { type: Number },
   description: { type: String },
   ingredients: { type: String },
   nutritions: { type: String },
+});
+
+const MenuSchema = new Schema<MenuType>({
+  category: { type: String, required: true },
+  items: { type: [MenuCategorySchema], required: true },
 });
 
 // RestaurantSchema
@@ -20,7 +24,7 @@ const RestaurantSchema = new Schema<RestaurantType>({
   deliveryDuration: { type: String, required: true },
   minOrderVal: { type: Number, required: true },
   tags: { type: [String], required: true },
-  menuType: { type: Map, of: [MenuSchema] },
+  menu: { type: [MenuSchema], required: true },
 });
 
 export const RestaurantModel = model<RestaurantType & Document>('Restaurant', RestaurantSchema);

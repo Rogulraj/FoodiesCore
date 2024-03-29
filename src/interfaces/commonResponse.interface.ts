@@ -8,3 +8,7 @@ export interface IdNameResponse {
   _id: string;
   name: string;
 }
+
+export interface IdResponse {
+  _id: string;
+}

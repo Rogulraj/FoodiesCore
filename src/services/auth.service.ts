@@ -44,7 +44,7 @@ export class AuthService {
 
     const response: CommonResponse<UserLoginResponse> = {
       statusCode: 200,
-      data: { _id: findUser._id, email: findUser.email, tokenData },
+      data: { _id: findUser._id, email: findUser.email, accountType: findUser.accountType, tokenData },
       message: 'login success',
     };
 

@@ -1,8 +1,8 @@
 import { HttpException } from '@/exceptions/httpException';
 import { StoreBase64Image } from '@/helpers/base64.helper';
 import { RequestWithId } from '@/interfaces/auth.interface';
-import { CommonResponse, IdNameResponse } from '@/interfaces/commonResponse.interface';
-import { AddMenuBody, MenuTypeItem, RestaurantType } from '@/interfaces/restaurant.interface';
+import { CommonResponse, IdNameResponse, IdResponse } from '@/interfaces/commonResponse.interface';
+import { AddMenuBody, MenuCategoryItems, MenuType, RestaurantType } from '@/interfaces/restaurant.interface';
 import { RestaurantModel } from '@/models/restaurant.model';
 
 export class RestaurantService {
@@ -15,7 +15,6 @@ export class RestaurantService {
     const createData = await RestaurantModel.create(userData);
 
     const response: CommonResponse<RestaurantType> = { statusCode: 201, data: createData, message: 'restaurant created' };
-
     return response;
   }
 
@@ -33,16 +32,25 @@ export class RestaurantService {
     return responseData;
   }
 
-  public async addMenuType(userId: RequestWithId['_id'], userData: AddMenuBody): Promise<CommonResponse<IdNameResponse>> {
+  public async addMenuCategory(userId: RequestWithId['_id'], userData: AddMenuBody): Promise<CommonResponse<IdNameResponse>> {
     const findData = await RestaurantModel.findOne({ _id: userId });
-    const type = userData.type;
+    const category = userData.category;
 
-    if (findData.menuType.has(type)) throw new HttpException(409, `This type ${userData.type} already exists`);
+    console.log(findData);
+    const menuItem = findData.menu.find(item => item.category === category);
 
-    findData.menuType.set(type, []);
+    if (menuItem) throw new HttpException(409, `This category ${userData.category} already exists`);
+    findData.menu.push({
+      category: category,
+      items: [],
+    });
     const update: RestaurantType = await findData.save();
 
-    const response: CommonResponse<IdNameResponse> = { statusCode: 200, data: { _id: update._id, name: update.name }, message: 'menu type added' };
+    const response: CommonResponse<IdNameResponse> = {
+      statusCode: 201,
+      data: { _id: update._id, name: update.name },
+      message: 'menu category added',
+    };
     return response;
   }
 
@@ -53,26 +61,96 @@ export class RestaurantService {
     userData.item.imageUrl = imagePath;
 
     const findData = await RestaurantModel.findOne({ _id: userId });
-    const type = userData.type;
+    const category = userData.category;
     const item = userData.item;
 
-    if (!findData.menuType.has(type)) throw new HttpException(409, `This type ${userData.type} does not exists`);
-
-    const menuItems = findData.menuType.get(type);
-    menuItems.push(item);
-
+    const menuItem = findData.menu.find(item => item.category === category);
+    if (!menuItem) throw new HttpException(409, `This category ${userData.category}  does not exists`);
+    menuItem.items.push(item);
     const update = await findData.save();
 
-    const response: CommonResponse<IdNameResponse> = { statusCode: 200, data: { _id: update._id, name: update.name }, message: 'menu item added' };
+    const response: CommonResponse<IdNameResponse> = { statusCode: 201, data: { _id: update._id, name: update.name }, message: 'menu item added' };
     return response;
   }
 
-  public async getFoodById(foodId: string, restaurantId: string, category: string): Promise<CommonResponse<MenuTypeItem>> {
-    const findFoodData: MenuTypeItem[] = await (await RestaurantModel.findById(restaurantId)).menuType.get(category);
-    const foodData: MenuTypeItem = findFoodData.find(item => item._id === foodId);
+  public async getAllMenuItems(restaurantId: string): Promise<CommonResponse<MenuType[]>> {
+    const findRestaurant = await RestaurantModel.findById(restaurantId);
+    if (!findRestaurant) throw new HttpException(409, 'This restaurant does not exists');
 
-    const response: CommonResponse<MenuTypeItem> = { statusCode: 200, data: foodData, message: 'food data fetched.' };
+    const menuList: MenuType[] = findRestaurant.menu;
 
+    const data: CommonResponse<MenuType[]> = { statusCode: 200, data: menuList, message: 'Menu items fetched' };
+    return data;
+  }
+
+  public async getFoodById(foodId: string, restaurantId: string, category: string): Promise<CommonResponse<MenuCategoryItems>> {
+    const findFoodData = await RestaurantModel.findById(restaurantId);
+    console.log(findFoodData);
+    if (!findFoodData) throw new HttpException(409, 'Restaurant does not exists');
+
+    const categoryIndex: number = findFoodData.menu.findIndex(item => item.category === category);
+    if (categoryIndex === -1) throw new HttpException(409, 'Category does not exists');
+
+    const foodData = findFoodData.menu[categoryIndex].items.find(food => food._id.toString() === foodId);
+    if (!foodData) throw new HttpException(409, 'Food Does not exists');
+
+    const data: MenuCategoryItems = foodData;
+
+    const response: CommonResponse<MenuCategoryItems> = { statusCode: 200, data: data, message: 'food data fetched.' };
     return response;
+  }
+
+  public async updateFoodById(
+    foodId: string,
+    restaurantId: string,
+    categoryId: string,
+    item: MenuCategoryItems,
+  ): Promise<CommonResponse<IdResponse>> {
+    const restaurant = await RestaurantModel.findById(restaurantId);
+    if (!restaurant) throw new HttpException(409, 'Restaurant does not exists');
+
+    const category = restaurant.menu.find(item => item._id.toString() === categoryId);
+    if (!category) throw new HttpException(409, 'Category does not exists');
+
+    const foodIndex = category.items.findIndex(food => food._id.toString() === foodId);
+    if (foodIndex === -1) throw new HttpException(409, 'Food does not exists');
+
+    const foodData = category.items[foodIndex];
+    category.items[foodIndex] = { ...foodData, ...item };
+
+    await restaurant.save();
+    const response: CommonResponse<IdResponse> = { statusCode: 200, data: { _id: foodId }, message: 'food item updated' };
+    return response;
+  }
+
+  public async removeFoodById(foodId: string, restaurantId: string, categoryId: string): Promise<CommonResponse<IdResponse>> {
+    const restaurant = await RestaurantModel.findById(restaurantId);
+    if (!restaurant) throw new HttpException(409, 'Restaurant Does not exists');
+
+    const category = restaurant.menu.find(item => item._id.toString() === categoryId);
+    if (!category) throw new HttpException(409, 'Category Does not exists');
+
+    const foodIndex = category.items.findIndex(food => food._id.toString() === foodId);
+    if (foodIndex === -1) throw new HttpException(409, 'Food Does not exists');
+
+    category.items.splice(foodIndex, 1);
+
+    await restaurant.save();
+    const response: CommonResponse<IdResponse> = { statusCode: 200, data: { _id: foodId }, message: 'food deleted' };
+    return response;
+  }
+
+  public async removeMenuCategaory(restaurantId: string, categoryId: string): Promise<CommonResponse<MenuType>> {
+    const restaurant = await RestaurantModel.findById(restaurantId);
+    if (!restaurant) throw new HttpException(409, 'Restaurant Does not exists');
+
+    const categoryIndex = restaurant.menu.findIndex(item => item._id.toString() === categoryId);
+    if (categoryIndex === -1) throw new HttpException(409, 'Category Does not exists');
+
+    const removeData = restaurant.menu.splice(categoryIndex, 1);
+    await restaurant.save();
+
+    const data: CommonResponse<MenuType> = { statusCode: 200, data: removeData[0], message: 'Category deleted' };
+    return data;
   }
 }

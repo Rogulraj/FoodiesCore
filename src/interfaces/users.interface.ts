@@ -25,5 +25,6 @@ export interface UserLoginBody {
 export interface UserLoginResponse {
   _id: string;
   email: string;
+  accountType: string;
   tokenData: TokenData;
 }

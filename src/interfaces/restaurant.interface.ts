@@ -1,4 +1,4 @@
-export interface MenuTypeItem {
+export interface MenuCategoryItems {
   _id?: string;
   name: string;
   imageUrl: string;
@@ -9,7 +9,9 @@ export interface MenuTypeItem {
 }
 
 export interface MenuType {
-  [key: string]: MenuTypeItem[];
+  _id?: string;
+  category: string;
+  items: MenuCategoryItems[];
 }
 
 export interface RestaurantType {
@@ -19,12 +21,12 @@ export interface RestaurantType {
   deliveryDuration: string;
   minOrderVal: number;
   tags: string[];
-  menuType: MenuType;
+  menu: MenuType[];
 }
 
 export interface AddMenuBody {
-  type: string;
-  item?: MenuTypeItem;
+  category: string;
+  item?: MenuCategoryItems;
 }
 
 // export interface AddMenuItemBody extends MenuTypeItem {

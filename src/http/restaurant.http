@@ -6,38 +6,35 @@
 # create restaurant
 POST {{baseURL}}/create
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NWY1NTUzNWVhZjE1YWMwMDVmYWZmN2QiLCJpYXQiOjE3MTA5NDYyMzcsImV4cCI6MTcxMDk0OTgzN30.xg5h6vHIy4ilNU3YfTkdqr-k84lkkGxCFjgJnJZwp20
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NWY1NTUzNWVhZjE1YWMwMDVmYWZmN2QiLCJpYXQiOjE3MTEzMzc4NDQsImV4cCI6MTcxMTM0MTQ0NH0.xM93e5jUODLQrhL1mfNXo3_BFAW5Yq7yxLHeTvZmWvs
 
 {
+    "_id": "65f55535eaf15ac005faff7d",
     "name": "Royal Spicy House",
     "imageUrl": "/path",
-    "menuType":  { 
-        "Breakfast": {
-            "name": "string",
-            "price": "string",
-            "description": "string",
-            "ingredients": "string",
-            "nutritions": "string"
-        }
-    }
+    "deliveryDuration": "string",
+    "minOrderVal": 21,
+    "tags": ["Pizza", "Burger"],
+    "menu": []
 }
 
 ###  
-PUT {{baseURL}}/add-menu-type
-Content-Type: multipart/form-data
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NWY1NTUzNWVhZjE1YWMwMDVmYWZmN2QiLCJpYXQiOjE3MTEwMDI5OTQsImV4cCI6MTcxMTAwNjU5NH0.wA3SqGlXn4xREnll21PKcK9l-t2Es-YvlnGSyKfLBQo
+PUT {{baseURL}}/add-menu-category
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NWY1NTUzNWVhZjE1YWMwMDVmYWZmN2QiLCJpYXQiOjE3MTEzMzc4NDQsImV4cCI6MTcxMTM0MTQ0NH0.xM93e5jUODLQrhL1mfNXo3_BFAW5Yq7yxLHeTvZmWvs
 
 {
-    "type": "Italian"
+    "category": "Dinner",
+    "items":[] 
 }
 
 ###
 PUT {{baseURL}}/add-menu-item
-Content-Type: multipart/form-data
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NWY1NTUzNWVhZjE1YWMwMDVmYWZmN2QiLCJpYXQiOjE3MTEwMDkwNDMsImV4cCI6MTcxMTAxMjY0M30.vprTxzr3ulpDpOMhzFKcI0uBTgdXduHwEkVZzivFuDo
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NWY1NTUzNWVhZjE1YWMwMDVmYWZmN2QiLCJpYXQiOjE3MTEzMzc4NDQsImV4cCI6MTcxMTM0MTQ0NH0.xM93e5jUODLQrhL1mfNXo3_BFAW5Yq7yxLHeTvZmWvs
 
 {
-    "type": "Italian",
+    "category": "Lunch",
     "item": {
         "name": "nigiri set",
         "imageUrl": "/path",
@@ -52,3 +49,40 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NWY1NTUzN
  
 GET {{baseURL}}/food/66004e9be34a27001e919894?restaurantId=65f55535eaf15ac005faff7d&category=Breakfast
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NWY1NTUzNWVhZjE1YWMwMDVmYWZmN2QiLCJpYXQiOjE3MTEyOTMzMDMsImV4cCI6MTcxMTI5NjkwM30.oVBXq_ztWxBR_9gAn2pwG6UYRa6lH2b0xpCnYtvwS_U
+
+
+###
+
+DELETE {{baseURL}}/food/remove-category/66013f6dcc9aaaabbe9db0db
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NjAxMTVjYThmMThhZDlhZTBhYzZiYmMiLCJpYXQiOjE3MTEzNjQwNDAsImV4cCI6MTcxMTM2NzY0MH0.MO6dTlNHzk3oCcD7S7HNu4wIvhoiuXofnE-iUb3bz5s
+
+###
+# update food item by id
+PUT {{baseURL}}/food/update/660581f02998b7f6df5d00e0
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NjAxMTVjYThmMThhZDlhZTBhYzZiYmMiLCJpYXQiOjE3MTE2MzU4NDUsImV4cCI6MTcxMTYzOTQ0NX0.YeIuJ1bhbPODp9XGb2uo1RLuopor0kL23t3IaClXC_E
+
+{
+    "restaurantId": "660115ca8f18ad9ae0ac6bbc",
+    "categoryId": "6601805cbbaa382cd9a6f706",
+    "item": {
+        "name": "Dosa",
+        "imageUrl": "/path",
+        "price": 10,
+        "description": "Im gonna try to update the food item with it is id",
+        "ingredients": "I litreally dont know, Hey sorry dude",
+        "nutritions": "it won't contains any nutritions any more"
+    }
+
+}
+
+###
+# delete food by id
+DELETE {{baseURL}}/food/remove-food/6606853c82690843a815da81
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NjAxMTVjYThmMThhZDlhZTBhYzZiYmMiLCJpYXQiOjE3MTE2MzU4NDUsImV4cCI6MTcxMTYzOTQ0NX0.YeIuJ1bhbPODp9XGb2uo1RLuopor0kL23t3IaClXC_E
+
+{
+    "restaurantId": "660115ca8f18ad9ae0ac6bbc",
+    "categoryId": "6601805cbbaa382cd9a6f706"
+}
