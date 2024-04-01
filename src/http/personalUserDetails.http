@@ -1,0 +1,17 @@
+
+
+@baseUrl="http://localhost:3006/api/v1/web/personal"
+
+###
+#create user details
+POST {{ baseUrl }}/user-details/create
+Content-Type: application/json 
+
+{
+    "_id": "66092a1573afcfae7641cff0",
+    "firstName": "rogul",
+    "lastName": "raj",
+    "imageUrl": "null"
+}
+
+###

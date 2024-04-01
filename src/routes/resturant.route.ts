@@ -33,6 +33,7 @@ export class RestaurantRoute {
     this.router.post(`${this.path}/create`, BodyAuthMiddleware, this.controller.createRestaurant);
 
     /** PUT */
+    this.router.put(`${this.path}/update`, UserVerificationMiddleware, this.controller.updateRestaurantDetails);
     this.router.put(`${this.path}/add-menu-category`, UserVerificationMiddleware, this.controller.addMenuCategory);
     this.router.put(`${this.path}/add-menu-item`, UserVerificationMiddleware, this.controller.addMenuItem);
     this.router.put(

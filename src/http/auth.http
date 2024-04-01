@@ -17,7 +17,7 @@ POST {{ baseURL }}/web/login
 Content-Type: application/json
 
 {
-    "email": "example@email.com",
+    "email": "example1@email.com",
     "password": "password@123"
 }
 

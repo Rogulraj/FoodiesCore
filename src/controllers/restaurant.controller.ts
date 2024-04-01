@@ -10,6 +10,7 @@ export class RestaurantController {
   public createRestaurant = async (req: Request, res: Response, next: NextFunction) => {
     try {
       const userData: RestaurantType = req.body;
+      console.log(userData);
 
       const createRestaurantData: CommonResponse<RestaurantType> = await this.service.createRestaurant(userData);
 
@@ -36,6 +37,18 @@ export class RestaurantController {
       const restaurantData: CommonResponse<RestaurantType> = await this.service.getRestaurantById(restaurantId);
 
       res.status(restaurantData.statusCode).json(restaurantData);
+    } catch (error) {
+      next(error);
+    }
+  };
+
+  public updateRestaurantDetails = async (req: RequestWithId, res: Response, next: NextFunction) => {
+    try {
+      const restaurantId = req._id;
+      const userData = req.body;
+
+      const updateData = await this.service.updateRestaurantDetails(restaurantId, userData);
+      res.status(updateData.statusCode).json(updateData);
     } catch (error) {
       next(error);
     }
