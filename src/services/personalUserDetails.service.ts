@@ -29,4 +29,30 @@ export class PersonalUserDetailsService {
     const data: CommonResponse<PersonalUserDetails> = { statusCode: 200, data: userDetails, message: 'user details fetched' };
     return data;
   }
+
+  public async updateUserDetailsById(userId: string, userData: PersonalUserDetails): Promise<CommonResponse<IdResponse>> {
+    const userDetails = await PersonalUserDetailsModel.findById(userId);
+
+    const base64Image = userData.imageUrl;
+    const imageUrl = userDetails.imageUrl;
+    if (base64Image !== undefined && base64Image !== 'null') {
+      const s3 = new AwsS3();
+      await s3.deleteObject(AWS_MAIN_BUCKET, imageUrl);
+
+      const imagePath = `restaurants/image-${Date.now()}.jpeg`;
+      await s3.uploadBase64Image(AWS_MAIN_BUCKET, imagePath, base64Image);
+
+      console.log(true);
+
+      userData.imageUrl = imagePath;
+    } else {
+      userData.imageUrl = imageUrl;
+    }
+
+    Object.assign(userDetails, userData);
+    await userDetails.save();
+
+    const response: CommonResponse<IdResponse> = { statusCode: 200, data: userDetails._id, message: 'user details updated' };
+    return response;
+  }
 }

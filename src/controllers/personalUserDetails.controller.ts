@@ -28,4 +28,16 @@ export class PersonalUserDetailController {
       next(error);
     }
   };
+
+  public updateUserDetailsById = async (req: RequestWithId, res: Response, next: NextFunction) => {
+    try {
+      const userId: string = req.params.id;
+      const userData: PersonalUserDetails = req.body;
+      const updateDetails: CommonResponse<IdResponse> = await this.service.updateUserDetailsById(userId, userData);
+
+      res.status(updateDetails.statusCode).json(updateDetails);
+    } catch (error) {
+      next(error);
+    }
+  };
 }

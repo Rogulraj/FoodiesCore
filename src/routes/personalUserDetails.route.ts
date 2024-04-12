@@ -24,5 +24,13 @@ export class PersonalUserDetailRoute {
       ParamsValidationMiddelware(IdParamDto),
       this.controller.getUserDetailsById,
     );
+
+    /** PUT */
+    this.router.put(
+      `${this.path}/user-details/update/:id`,
+      UserVerificationMiddleware,
+      ParamsValidationMiddelware(IdParamDto),
+      this.controller.updateUserDetailsById,
+    );
   }
 }
