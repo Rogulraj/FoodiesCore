@@ -14,12 +14,16 @@ export const envVars = cleanEnv(process.env, {
   DB_PASSWORD: str(),
   DB_DATABASE: str(),
   CREDENTIALS: bool({ default: true }),
-  AWS_ACCESS_KEY: str(),
-  AWS_SECRET_ACCESS_KEY: str(),
-  AWS_REGION: str(),
-  AWS_MAIN_BUCKET: str(),
+  // AWS_ACCESS_KEY: str(),
+  // AWS_SECRET_ACCESS_KEY: str(),
+  // AWS_REGION: str(),
+  // AWS_MAIN_BUCKET: str(),
+  SUPABASE_URL: str(),
+  SUPABASE_KEY: str(),
+  SUPABASE_BUCKET: str(),
 });
 
+// TODO: use one export statement, perfer to use default export.
 export const {
   NODE_ENV,
   PORT,
@@ -31,8 +35,13 @@ export const {
   DB_DATABASE,
   DB_PASSWORD,
   DB_USERNAME,
-  AWS_ACCESS_KEY,
-  AWS_REGION,
-  AWS_SECRET_ACCESS_KEY,
-  AWS_MAIN_BUCKET,
+  // AWS_ACCESS_KEY: str(),
+  // AWS_SECRET_ACCESS_KEY: str(),
+  // AWS_REGION: str(),
+  // AWS_MAIN_BUCKET: str(),
+  SUPABASE_URL,
+  SUPABASE_KEY,
+  SUPABASE_BUCKET,
 } = envVars;
+
+export default envVars;
